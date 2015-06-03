@@ -9,4 +9,3 @@ cd /home/stack
 sudo -u stack git clone https://git.openstack.org/openstack-dev/devstack
 cd devstack
 git checkout $BRANCH
-cp /vagrant/local.conf .
