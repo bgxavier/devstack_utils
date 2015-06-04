@@ -1,12 +1,13 @@
 BRANCH=stable/kilo
+STACK_USER=openstack
 
-useradd -m openstack
-echo "openstack	ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-echo "Defaults:openstack !requiretty" >> /etc/sudoers
+useradd -m $STACK_USER
+#echo "openstack	ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
+#echo "Defaults:openstack !requiretty" >> /etc/sudoers
 DEBIAN_FRONTEND=noninteractive sudo apt-get -qqy update || sudo yum update -qy
 DEBIAN_FRONTEND=noninteractive sudo apt-get install -qqy git || sudo yum install -qy git
 cd /home/openstack
-sudo -u openstack git clone https://git.openstack.org/openstack-dev/devstack
+sudo -u $STACK_USER git clone https://git.openstack.org/openstack-dev/devstack
 cd devstack
 git checkout $BRANCH
 
@@ -26,6 +27,8 @@ MYSQL_PASSWORD=password
 RABBIT_PASSWORD=password
 SERVICE_PASSWORD=password
 SERVICE_TOKEN=tokentoken
+
+STACK_USER=openstack
 
 enable_service ceilometer-acompute ceilometer-acentral ceilometer-anotification ceilometer-collector ceilometer-alarm-evaluator ceilometer-alarm-notifier ceilometer-api
 enable_service heat h-api h-api-cfn h-api-cw h-eng
