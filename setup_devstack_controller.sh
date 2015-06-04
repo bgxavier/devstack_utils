@@ -1,12 +1,12 @@
 BRANCH=stable/kilo
 
-useradd -m stack
-echo "stack	ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-echo "Defaults:stack !requiretty" >> /etc/sudoers
+useradd -m openstack
+echo "openstack	ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+echo "Defaults:openstack !requiretty" >> /etc/sudoers
 DEBIAN_FRONTEND=noninteractive sudo apt-get -qqy update || sudo yum update -qy
 DEBIAN_FRONTEND=noninteractive sudo apt-get install -qqy git || sudo yum install -qy git
-cd /home/stack
-sudo -u stack git clone https://git.openstack.org/openstack-dev/devstack
+cd /home/openstack
+sudo -u openstack git clone https://git.openstack.org/openstack-dev/devstack
 cd devstack
 git checkout $BRANCH
 
@@ -16,9 +16,8 @@ cat << EOT > local.conf
 HOST_IP=10.32.45.201
 
 FLAT_INTERFACE=em2
-FIXED_RANGE=192.168.0.0/24
+FIXED_RANGE=192.168.11.128/29
 FIXED_NETWORK_SIZE=128
-FLOATING_RANGE=192.168.0.128/25
 MULTI_HOST=1
 LOGFILE=/opt/stack/logs/stack.sh.log
 
@@ -37,7 +36,11 @@ RECLONE=yes
 
 BRANCH=stable/kilo
 
+GIT_BASE=${GIT_BASE:-https://git.openstack.org}
+
+REQUIREMENTS_REPO=https://github.com/openstack/requirements.git
 REQUIREMENTS_BRANCH=$BRANCH
+
 CINDER_BRANCH=$BRANCH
 HEAT_BRANCH=$BRANCH
 CEILOMETER_BRANCH=$BRANCH
