@@ -9,5 +9,5 @@ cd /opt/stack/nova-docker
 # sudo git checkout stable/kilo && sudo git pull --ff-only origin stable/kilo
 sudo pip install .
 [ -d /etc/nova ] || mkdir /etc/nova
-sudo cp /etc/nova/rootwrap.d/docker.filters \
+sudo cp etc/nova/rootwrap.d/docker.filters \
   /etc/nova/rootwrap.d/
