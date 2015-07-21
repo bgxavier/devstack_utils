@@ -1,4 +1,4 @@
-lias ls="ls --color"
+alias ls="ls --color"
 
 . /opt/devstack/openrc admin admin
 
