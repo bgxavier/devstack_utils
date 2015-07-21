@@ -14,5 +14,14 @@ function osdemo {
 }
 
 function nova-delete-all {
-        nova list --all | awk '$2 && $2 != "ID" {print $2}' | xargs -n1 nova delete
+        nova list | awk '$2 && $2 != "ID" {print $2}' | xargs -n1 nova delete
+}
+
+
+function up-utils {
+        cd /opt/devstack_utils; git commit -am "vai utils" ; git push
+}
+
+function up-benchmark {
+        cd /opt/openstack_benchmarks; git commit -am "vai benchmark" ; git push
 }
