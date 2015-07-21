@@ -14,5 +14,5 @@ function osdemo {
 }
 
 function nova-delete-all {
-        nova list | awk '$2 && $2 != "ID" {print $2}' | xargs -n1 nova delete
+        nova list --all | awk '$2 && $2 != "ID" {print $2}' | xargs -n1 nova delete
 }
