@@ -5,6 +5,7 @@ alias ls="ls --color"
 export LC_ALL=en_US.utf8
 export LANG=en_US.utf8
 
+
 function osadmin {
         source /opt/devstack/openrc admin admin
 }
@@ -14,14 +15,14 @@ function osdemo {
 }
 
 function nova-delete-all {
-        nova list | awk '$2 && $2 != "ID" {print $2}' | xargs -n1 nova delete
+        nova list --all | awk '$2 && $2 != "ID" {print $2}' | xargs -n1 nova delete
 }
 
 
 function up-utils {
-        cd /opt/devstack_utils; git commit -am "vai utils" ; git push
+        cd /opt/devstack_utils; git pull; git add --all; git commit -am "vai utils" ; git push
 }
 
 function up-benchmark {
-        cd /opt/openstack_benchmarks; git commit -am "vai benchmark" ; git push
+        cd /opt/openstack_benchmarks; git pull; git add --all;  git commit -am "vai benchmark" ; git push
 }
