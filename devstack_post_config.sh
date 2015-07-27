@@ -1,3 +1,5 @@
+#/bin/bash
+
 source /opt/devstack/openrc admin admin
 
 nova quota-class-update --instances -1 --cores -1 --ram -1 --fixed-ips -1 --floating-ips -1 default
