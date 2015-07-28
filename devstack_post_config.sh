@@ -9,3 +9,5 @@ nova secgroup-add-rule default tcp 22 22 0.0.0.0/0
 glance image-create --name “osv-tomcat” --is-public True --disk-format qcow2 --container-format bare --file /opt/images/osv-tomcat-resized.qcow2
 
 glance image-create --name “osv-tomcat” --is-public True --disk-format qcow2 --container-format bare --file /opt/images/ubuntu-tomcat.qcow2
+
+sudo cp /opt/devstack_utils/controller/etc/neutron/api-paste.ini /etc/neutron/
