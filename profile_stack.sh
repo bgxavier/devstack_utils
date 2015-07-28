@@ -5,6 +5,9 @@ alias ls="ls --color"
 export LC_ALL=en_US.utf8
 export LANG=en_US.utf8
 
+RALLY_HOME='/opt/rally_install'
+alias initrally='source $RALLY_HOME/bin/activate'
+alias rally='$RALLY_HOME/bin/rally'
 
 function osadmin {
         source /opt/devstack/openrc admin admin
@@ -20,9 +23,9 @@ function nova-delete-all {
 
 
 function up-utils {
-        cd /opt/devstack_utils; git pull; git add --all; git commit -am "vai utils" ; git push
+        cd /opt/devstack_utils; git pull; git add --all;  git commit -am "vai utils" ; git push
 }
 
 function up-benchmark {
-        cd /opt/openstack_benchmarks; git pull; git add --all;  git commit -am "vai benchmark" ; git push
+        cd /opt/openstack_benchmarks; git pull; git add --all; git commit -am "vai benchmark" ; git push
 }
