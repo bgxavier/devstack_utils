@@ -21,7 +21,6 @@ function nova-delete-all {
         nova list --all | awk '$2 && $2 != "ID" {print $2}' | xargs -n1 nova delete
 }
 
-
 function up-utils {
         cd /opt/devstack_utils; git pull; git add --all;  git commit -am "vai utils" ; git push
 }

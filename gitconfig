@@ -1,0 +1,7 @@
+[credential]
+        helper = store
+[push]
+        default = matching
+[user]
+        email = bgxavier@gmail.com
+        name = Bruno Xavier
