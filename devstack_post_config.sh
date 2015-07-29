@@ -10,4 +10,6 @@ glance image-create --name “osv-tomcat” --is-public True --disk-format qcow2
 
 glance image-create --name “ubuntu-tomcat” --is-public True --disk-format qcow2 --container-format bare --file /opt/images/ubuntu-tomcat.qcow2
 
+glance image-create --name tomcat --is-public true --container-format docker --disk-format raw --file /opt/images/tomcat.tar
+
 sudo cp /opt/devstack_utils/controller/etc/neutron/api-paste.ini /etc/neutron/
