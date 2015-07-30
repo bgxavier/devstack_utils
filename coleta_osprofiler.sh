@@ -1,3 +1,4 @@
+#/bin/bash
 virt_type=$1
 num_instances=$2
 
@@ -33,7 +34,7 @@ source /opt/devstack/openrc admin admin
 
 echo "Removing _base cache.. Ensure you are in COMPUTE NODE"
 
-sudo rm -fv /opt/stack/data/instances/_base/*
+sudo rm -fv /opt/stack/data/nova/instances/_base/*
 
 echo "Collecting data to $1_osprofiler.csv"
 
