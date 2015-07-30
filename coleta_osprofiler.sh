@@ -1,4 +1,3 @@
-#/bin/bash
 virt_type=$1
 num_instances=$2
 
@@ -38,7 +37,7 @@ sudo rm -fv /opt/stack/data/nova/instances/_base/*
 
 echo "Collecting data to $1_osprofiler.csv"
 
-for i in { 1..'$num_instances' }; do nova --profile SECRET_KEY boot --image $IMAGE --flavor 6 test | egrep -o "html.*" | osprofiler trace show --html `awk '{print $2}'` | grep -o '"started": 0, "finished": [0-9]*, "name": "total"' | egrep -o '"finished": [0-9]*' | egrep -o [0-9]* | tee -a $1_osprofiler.csv; done
+for i in $( seq 1 $num_instances ); do nova --profile SECRET_KEY boot --image $IMAGE --flavor 6 test | egrep -o "html.*" | osprofiler trace show --html `awk '{print $2}'` | grep -o '"started": 0, "finished": [0-9]*, "name": "total"' | egrep -o '"finished": [0-9]*' | egrep -o [0-9]* | tee -a $1_osprofiler.csv; done
 
 echo "Done."
 
