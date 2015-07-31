@@ -2,7 +2,7 @@ virt_type=$1
 num_instances=$2
 
 KVM_IMAGE="32a54fbf-8a22-489c-8eb5-bf51f85112fa"
-DOCKER_IMAGE="00f9dd6d-3d96-4fc2-85c8-02caf0d553da"
+DOCKER_IMAGE="ab6faf8c-1643-4155-ad94-f203e81b059e"
 OSV_IMAGE="4eec9e83-15b9-4a3d-8641-c79544d2f2e5"
 
 case $1 in
@@ -34,6 +34,12 @@ source /opt/devstack/openrc admin admin
 echo "Removing _base cache.. Ensure you are in COMPUTE NODE"
 
 sudo rm -fv /opt/stack/data/nova/instances/_base/*
+
+echo "Removing containers and images from docker just in case"
+
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)
+docker rmi $(docker images -q)
 
 echo "Collecting data to osprofiler.csv"
 
