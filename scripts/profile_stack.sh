@@ -26,7 +26,6 @@ function nova-delete-all {
 function docker-delete-all {
         docker stop $(docker ps -a -q)
         docker rm $(docker ps -a -q)
-	docker rmi $(docker images -q)
 }
 
 function up-utils {
