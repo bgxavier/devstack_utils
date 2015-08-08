@@ -1,11 +1,11 @@
 virt_type=$1
 num_instances=$2
 
-KVM_IMAGE="cirros-0.3.2-x86_64-uec"
+KVM_IMAGE="ubuntu-tomcat"
 OSV_IMAGE="osv-tomcat"
 DOCKER_IMAGE="tomcat"
 
-FLAVOR="m1.tiny"
+FLAVOR="m1.micro"
 
 OUTPUT_TEMP='osprofiler.txt'
 OUTPUT_TIMES='ostimes.csv'

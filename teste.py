@@ -4,11 +4,10 @@ from keystoneclient.auth.identity import v2
 from keystoneclient import session
 from novaclient import client
 from oslo_utils import importutils
-import osprofiler.profiler
 
+import string
+import random
 import threading
-
-osprofiler_profiler = importutils.try_import("osprofiler.profiler")
 
 AUTH_URL = os.environ['OS_AUTH_URL']
 USERNAME = os.environ['OS_USERNAME']
@@ -27,22 +26,25 @@ image = nova.images.find(name="cirros-0.3.2-x86_64-uec")
 flavor = nova.flavors.find(name="m1.tiny")
 network = nova.networks.find(label="private")
 
-def worker():
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+         return ''.join(random.choice(chars) for _ in range(size))
 
-	if osprofiler_profiler:
-	 osprofiler_profiler.init('SECRET_KEY')
-	 trace_id = osprofiler_profiler.get().get_base_id()
+def worker():
+	 from osprofiler import profiler
+	 profiler._clean()
+	 profiler.init('SECRET_KEY')
+	 trace_id = profiler.get().get_base_id()
 	 print("Profiling trace ID: %s" % trace_id)
 	 print("To display trace use next command:\n"
 	    "osprofiler trace show --html %s " % trace_id)
 
-	server = nova.servers.create(name = "debian-test", 
+	 server = nova.servers.create(name = "debian-test", 
 	                                 image = image.id, 
 	                                 flavor = flavor.id, 
 	                                 network = network.id)
 
 threads = []
-for i in range(3):
+for i in range(6):
     t = threading.Thread(target=worker)
     threads.append(t)
     t.start()

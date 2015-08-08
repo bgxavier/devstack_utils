@@ -5,9 +5,9 @@ alias ls="ls --color"
 export LC_ALL=en_US.utf8
 export LANG=en_US.utf8
 
-RALLY_HOME='/opt/rally_install'
-alias initrally='source $RALLY_HOME/bin/activate'
-alias rally='$RALLY_HOME/bin/rally'
+#RALLY_HOME='/opt/rally_install'
+#alias initrally='source $RALLY_HOME/bin/activate'
+#alias rally='$RALLY_HOME/bin/rally'
 
 PATH=$PATH:/opt/devstack_utils/scripts
 
