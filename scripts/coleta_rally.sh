@@ -76,6 +76,9 @@ for i in `cat $OUTPUT_TEMP`; do
 
 done
 
+rm -f $OUTPUT_TEMP
+rm -f $BOOT_JSON_FILE
+
 source /opt/devstack/openrc demo demo
 
 echo "Done."
