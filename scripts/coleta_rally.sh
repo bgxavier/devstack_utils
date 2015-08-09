@@ -56,6 +56,8 @@ echo $BOOT_JSON > $BOOT_JSON_FILE
 $RALLY task start ./$BOOT_JSON_FILE | grep osprofiler | awk '{print $5}' > $OUTPUT_TEMP
 echo "total_time;spawn_time;image_time;domain_time;instances" > $OUTPUT_TIMES
 
+sleep 10
+
 for i in `cat $OUTPUT_TEMP`; do
 
 	TOTAL_TIME=`osprofiler trace show --html $i | grep -o '"started": 0, "finished": [0-9]*, "name": "total"' | egrep -o '"finished": [0-9]*' | egrep -o '[0-9]*'`
