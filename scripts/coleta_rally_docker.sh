@@ -1,7 +1,7 @@
 virt_type=$1
 num_instances=$2
 
-IMAGE="tomcat"
+IMAGE="ubuntu-teste"
 
 FLAVOR="m1.micro"
 
@@ -15,13 +15,13 @@ BOOT_JSON='{"NovaServers.boot_server":[{"args":{"flavor":{"name":"'$FLAVOR'"},"i
 
 source /opt/devstack/openrc admin admin
 
-echo "Cleaning cache.. Ensure you are in COMPUTE NODE"
+#echo "Cleaning cache.. Ensure you are in COMPUTE NODE"
 
-sudo rm -f /opt/stack/data/nova/instances/_base/* 
+#sudo rm -f /opt/stack/data/nova/instances/_base/* 
 
-docker stop $(docker ps -a -q) > /dev/null 2>&1 
-docker rm $(docker ps -a -q) > /dev/null 2>&1 
-docker rmi $(docker images -q) > /dev/null 2>&1 
+#docker stop $(docker ps -a -q) > /dev/null 2>&1 
+#docker rm $(docker ps -a -q) > /dev/null 2>&1 
+#docker rmi $(docker images -q) > /dev/null 2>&1 
 
 echo "Running rally and collecting data to ./$OUTPUT_TEMP"
 
