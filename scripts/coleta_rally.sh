@@ -8,7 +8,7 @@ DOCKER_IMAGE="tomcat"
 FLAVOR="m1.micro"
 
 OUTPUT_TEMP='osprofiler.txt'
-OUTPUT_TIMES='ostimes.csv'
+OUTPUT_TIMES="ostimes_$virt_type.csv"
 BOOT_JSON_FILE='boot.json'
 
 RALLY="/usr/local/bin/rally"
@@ -54,9 +54,9 @@ echo "Running rally and collecting data to ./$OUTPUT_TEMP"
 echo $BOOT_JSON > $BOOT_JSON_FILE
 
 $RALLY task start ./$BOOT_JSON_FILE | grep osprofiler | awk '{print $5}' > $OUTPUT_TEMP
-echo "total_time;spawn_time;image_time;domain_time;instances" > $OUTPUT_TIMES
+echo "total_time;spawn_timee;image_time;instance_time;concurrent_instances" >> $OUTPUT_TIMES
 
-sleep 10
+sleep 180
 
 for i in `cat $OUTPUT_TEMP`; do
 
@@ -69,7 +69,7 @@ for i in `cat $OUTPUT_TEMP`; do
 	CREATE_IMAGE_START_TIME=`osprofiler trace show --html $i | grep -o '"nova.virt.libvirt.driver._create_image", "name": "driver", "service": "nova-compute", "started": [0-9]*, "finished": [0-9]*' | awk '{print $7}' | egrep -o '[0-9]*'`
 	CREATE_IMAGE_STOP_TIME=`osprofiler trace show --html $i | grep -o '"nova.virt.libvirt.driver._create_image", "name": "driver", "service": "nova-compute", "started": [0-9]*, "finished": [0-9]*' | awk '{print $9}' | egrep -o '[0-9]*'`
 	CREATE_IMAGE_TIME=$(expr $CREATE_IMAGE_STOP_TIME - $CREATE_IMAGE_START_TIME)
-	
+
 	CREATE_DOMAIN_START_TIME=`osprofiler trace show --html $i | grep -o '"nova.virt.libvirt.driver._create_domain_and_network", "name": "driver", "service": "nova-compute", "started": [0-9]*, "finished": [0-9]*' | awk '{print $7}' | egrep -o '[0-9]*'`
 	CREATE_DOMAIN_STOP_TIME=`osprofiler trace show --html $i | grep -o '"nova.virt.libvirt.driver._create_domain_and_network", "name": "driver", "service": "nova-compute", "started": [0-9]*, "finished": [0-9]*' | awk '{print $9}' | egrep -o '[0-9]*'`
 	CREATE_DOMAIN_TIME=$(expr $CREATE_DOMAIN_STOP_TIME - $CREATE_DOMAIN_START_TIME)
@@ -78,8 +78,8 @@ for i in `cat $OUTPUT_TEMP`; do
 
 done
 
-rm -f $OUTPUT_TEMP
-rm -f $BOOT_JSON_FILE
+#rm -f $OUTPUT_TEMP
+#rm -f $BOOT_JSON_FILE
 
 source /opt/devstack/openrc demo demo
 
