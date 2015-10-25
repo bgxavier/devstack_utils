@@ -41,22 +41,14 @@ BOOT_JSON='{"NovaServers.boot_server":[{"args":{"flavor":{"name":"'$FLAVOR'"},"i
 
 source /opt/devstack/openrc admin admin
 
-echo "Cleaning cache.. Ensure you are in COMPUTE NODE"
-
-sudo rm -f /opt/stack/data/nova/instances/_base/* 
-
-docker stop $(docker ps -a -q) > /dev/null 2>&1 
-docker rm $(docker ps -a -q) > /dev/null 2>&1 
-docker rmi $(docker images -q) > /dev/null 2>&1 
-
 echo "Running rally and collecting data to ./$OUTPUT_TEMP"
 
 echo $BOOT_JSON > $BOOT_JSON_FILE
 
 $RALLY task start ./$BOOT_JSON_FILE | grep osprofiler | awk '{print $5}' > $OUTPUT_TEMP
-echo "total_time;spawn_timee;image_time;instance_time;concurrent_instances" >> $OUTPUT_TIMES
+echo "total_time;spawn_time;image_time;instance_time;concurrent_instances" >> $OUTPUT_TIMES
 
-sleep 180
+sleep 60
 
 for i in `cat $OUTPUT_TEMP`; do
 
