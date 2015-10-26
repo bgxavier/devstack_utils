@@ -7,6 +7,7 @@ DOCKER_IMAGE="tomcat"
 
 FLAVOR="m1.micro"
 
+RALLY_OUTPUT='rally_output.txt'
 OUTPUT_TEMP='osprofiler.txt'
 OUTPUT_TIMES="ostimes_$virt_type.csv"
 BOOT_JSON_FILE='boot.json'
@@ -45,10 +46,14 @@ echo "Running rally and collecting data to ./$OUTPUT_TEMP"
 
 echo $BOOT_JSON > $BOOT_JSON_FILE
 
-$RALLY task start ./$BOOT_JSON_FILE | grep osprofiler | awk '{print $5}' > $OUTPUT_TEMP
-echo "total_time;spawn_time;image_time;instance_time;concurrent_instances" >> $OUTPUT_TIMES
+$RALLY task start ./$BOOT_JSON_FILE | tee $RALLY_OUTPUT | grep osprofiler | awk '{print $5}' > $OUTPUT_TEMP
 
-sleep 60
+LOAD_DURATION=`grep "Load duration" $RALLY_OUTPUT | awk '{print $3}'`
+
+echo "Load Duration: $LOAD_DURATION" >> $OUTPUT_TIMES
+echo "total_time;spawn_time;disk_info_time;get_xml_time;image_time;instance_time;concurrent_instances" >> $OUTPUT_TIMES
+
+sleep 260
 
 for i in `cat $OUTPUT_TEMP`; do
 
@@ -58,6 +63,14 @@ for i in `cat $OUTPUT_TEMP`; do
 	SPAWN_STOP_TIME=`osprofiler trace show --html $i | grep -o 'spawn", "name": "driver", "service": "nova-compute", "started": [0-9]*, "finished": [0-9]*' | awk '{print $9}' | egrep -o '[0-9]*'`
 	SPAWN_TIME=$(expr $SPAWN_STOP_TIME - $SPAWN_START_TIME)
 
+        GET_DISK_INFO_START=`osprofiler trace show --html $i | grep -o '"nova.virt.libvirt.blockinfo.get_disk_info", "name": "get_disk_info", "service": "nova-compute", "started": [0-9]*, "finished": [0-9]*' | awk '{print $7}' | egrep -o '[0-9]*' | tail -1`
+        GET_DISK_INFO_STOP=`osprofiler trace show --html $i | grep -o '"nova.virt.libvirt.blockinfo.get_disk_info", "name": "get_disk_info", "service": "nova-compute", "started": [0-9]*, "finished": [0-9]*' | awk '{print $9}' | egrep -o '[0-9]*' | tail -1`
+	GET_DISK_INFO_TIME=$(expr $GET_DISK_INFO_STOP - $GET_DISK_INFO_START)
+
+        GET_GUEST_XML_START=`osprofiler trace show --html $i | grep -o '"nova.virt.libvirt.driver._get_guest_xml", "name": "driver", "service": "nova-compute", "started": [0-9]*, "finished": [0-9]*' | awk '{print $7}' | egrep -o '[0-9]*'`
+        GET_GUEST_XML_STOP=`osprofiler trace show --html $i | grep -o '"nova.virt.libvirt.driver._get_guest_xml", "name": "driver", "service": "nova-compute", "started": [0-9]*, "finished": [0-9]*' | awk '{print $9}' | egrep -o '[0-9]*'`
+	GET_GUEST_XML_TIME=$(expr $GET_GUEST_XML_STOP - $GET_GUEST_XML_START)
+
 	CREATE_IMAGE_START_TIME=`osprofiler trace show --html $i | grep -o '"nova.virt.libvirt.driver._create_image", "name": "driver", "service": "nova-compute", "started": [0-9]*, "finished": [0-9]*' | awk '{print $7}' | egrep -o '[0-9]*'`
 	CREATE_IMAGE_STOP_TIME=`osprofiler trace show --html $i | grep -o '"nova.virt.libvirt.driver._create_image", "name": "driver", "service": "nova-compute", "started": [0-9]*, "finished": [0-9]*' | awk '{print $9}' | egrep -o '[0-9]*'`
 	CREATE_IMAGE_TIME=$(expr $CREATE_IMAGE_STOP_TIME - $CREATE_IMAGE_START_TIME)
@@ -66,7 +79,7 @@ for i in `cat $OUTPUT_TEMP`; do
 	CREATE_DOMAIN_STOP_TIME=`osprofiler trace show --html $i | grep -o '"nova.virt.libvirt.driver._create_domain_and_network", "name": "driver", "service": "nova-compute", "started": [0-9]*, "finished": [0-9]*' | awk '{print $9}' | egrep -o '[0-9]*'`
 	CREATE_DOMAIN_TIME=$(expr $CREATE_DOMAIN_STOP_TIME - $CREATE_DOMAIN_START_TIME)
 
-	echo $TOTAL_TIME';'$SPAWN_TIME';'$CREATE_IMAGE_TIME';'$CREATE_DOMAIN_TIME';'$num_instances >> $OUTPUT_TIMES
+	echo $TOTAL_TIME';'$SPAWN_TIME';'$GET_DISK_INFO_TIME';'$GET_GUEST_XML_TIME';'$CREATE_IMAGE_TIME';'$CREATE_DOMAIN_TIME';'$num_instances >> $OUTPUT_TIMES
 
 done
 
