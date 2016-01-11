@@ -4,6 +4,7 @@ alias ls="ls --color"
 
 export LC_ALL=en_US.utf8
 export LANG=en_US.utf8
+export CAPSTAN_ROOT='/opt/osv_images'
 
 RALLY_HOME='/opt/stack/rally'
 alias initrally='source $RALLY_HOME/bin/activate'
