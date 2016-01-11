@@ -54,7 +54,7 @@ echo "Load Duration: $LOAD_DURATION" >> $OUTPUT_TIMES
 echo "total_time;spawn_time;disk_info_time;get_xml_time;image_download_time;image_convert_time;image_copy_time;image_create_time;instance_time;concurrent_instances" >> $OUTPUT_TIMES
 
 
-sleep 260
+sleep 600
 
 for i in `cat $OUTPUT_TEMP`; do
 

@@ -8,7 +8,7 @@ FLAVOR="m1.micro"
 OUTPUT_TEMP='osprofiler.txt'
 OUTPUT_TIMES="ostimes_$virt_type.csv"
 BOOT_JSON_FILE='boot.json'
-
+RALLY_OUTPUT='rally_output.txt'
 RALLY="/usr/local/bin/rally"
 
 BOOT_JSON='{"NovaServers.boot_server":[{"args":{"flavor":{"name":"'$FLAVOR'"},"image":{"name":"'$IMAGE'"}},"runner":{"type":"constant","times":'$num_instances',"concurrency":'$num_instances'},"context":{"users":{"tenants":1,"users_per_tenant":1}}}]}'
@@ -19,10 +19,17 @@ echo "Running rally and collecting data to ./$OUTPUT_TEMP"
 
 echo $BOOT_JSON > $BOOT_JSON_FILE
 
-$RALLY task start ./$BOOT_JSON_FILE | grep osprofiler | awk '{print $5}' > $OUTPUT_TEMP
-echo "total_time;spawn_time;image_time;instance_time;concurrent_instances" > $OUTPUT_TIMES
+#$RALLY task start ./$BOOT_JSON_FILE | grep osprofiler | awk '{print $5}' > $OUTPUT_TEMP
 
-sleep 10
+$RALLY task start ./$BOOT_JSON_FILE | tee $RALLY_OUTPUT | grep osprofiler | awk '{print $5}' > $OUTPUT_TEMP
+
+LOAD_DURATION=`grep "Load duration" $RALLY_OUTPUT | awk '{print $3}'`
+
+echo "Load Duration: $LOAD_DURATION" >> $OUTPUT_TIMES
+
+echo "total_time;spawn_time;image_import;instance_time;concurrent_instances" >> $OUTPUT_TIMES
+
+sleep 170
 
 for i in `cat $OUTPUT_TEMP`; do
 
@@ -53,8 +60,8 @@ for i in `cat $OUTPUT_TEMP`; do
 
 done
 
-rm -f $OUTPUT_TEMP
-rm -f $BOOT_JSON_FILE
+#rm -f $OUTPUT_TEMP
+#rm -f $BOOT_JSON_FILE
 
 source /opt/devstack/openrc demo demo
 
