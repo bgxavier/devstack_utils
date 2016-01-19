@@ -7,20 +7,4 @@ nova-manage service disable --host=controller --service=nova-compute
 nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0
 nova secgroup-add-rule default tcp 22 22 0.0.0.0/0
 
-glance image-create --name "apache-activemq" --is-public True --disk-format qcow2 --container-format bare --file /opt/osv_images/apache-activemq/apache-activemq.qemu
-
-glance image-create --name cassandra --is-public True --disk-format qcow2 --container-format bare --file /opt/osv_images/cassandra/cassandra.qemu
-
-glance image-create --name "apache-zookeeper" --is-public True --disk-format qcow2 --container-format bare --file /opt/osv_images/apache-zookeeper/apache-zookeeper.qemu
-
-glance image-create --name haproxy --is-public True --disk-format qcow2 --container-format bare --file /opt/osv_images/haproxy/haproxy.qemu
-
-glance image-create --name tomcat --is-public True --disk-format qcow2 --container-format bare --file /opt/osv_images/tomcat/tomcat.qemu
-
-#glance image-create --name “osv-tomcat” --is-public True --disk-format qcow2 --container-format bare --file /opt/images/osv-tomcat-resized.qcow2
-
-#glance image-create --name “ubuntu-tomcat” --is-public True --disk-format qcow2 --container-format bare --file /opt/images/ubuntu-tomcat.qcow2
-
-#glance image-create --name tomcat --is-public true --container-format docker --disk-format raw --file /opt/images/tomcat.tar
-
 sudo cp /opt/devstack_utils/controller/etc/neutron/api-paste.ini /etc/neutron/
