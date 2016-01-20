@@ -17,3 +17,5 @@ glance image-create --name apache-spark --is-public True --disk-format qcow2 --c
 glance image-create --name redis-memonly --is-public True --disk-format qcow2 --container-format bare --file /opt/osv_images/redis-memonly/redis-memonly.qemu
 
 glance image-create --name sqlite --is-public True --disk-format qcow2 --container-format bare --file /opt/osv_images/sqlite/sqlite.qemu
+
+glance image-create --name mysql41 --is-public True --disk-format qcow2 --container-format bare --file /opt/osv_images/mysql41/mysql41.qemu
