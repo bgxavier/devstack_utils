@@ -6,8 +6,12 @@ export LC_ALL=en_US.utf8
 export LANG=en_US.utf8
 export CAPSTAN_ROOT='/opt/osv_images'
 
-# Capstan
+# Capstan wget installation
 export PATH=$PATH:/opt/stack/bin
+
+# Capstan installation from source 
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin:/usr/local/go/bin
 
 RALLY_HOME='/opt/stack/rally'
 alias initrally='source $RALLY_HOME/bin/activate'
