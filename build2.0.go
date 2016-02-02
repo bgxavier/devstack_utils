@@ -37,6 +37,9 @@ func random(min, max int) int {
 }
 
 func Build(r *util.Repo, image *core.Image, template *core.Template, verbose bool, mem string) error {
+        myrand := random(20000,30000)
+        porta  := strconv.Itoa(myrand)
+	
 	if err := os.MkdirAll(filepath.Dir(r.ImagePath(image.Hypervisor, image.Name)), 0777); err != nil {
 		return err
 	}
@@ -69,11 +72,11 @@ func Build(r *util.Repo, image *core.Image, template *core.Template, verbose boo
 		return err
 	}
 	if template.RpmBase != nil {
-		if err := UploadRPM(r, image.Hypervisor, image.Name, template, verbose, mem); err != nil {
+		if err := UploadRPM(r, image.Hypervisor, image.Name, template, verbose, mem, porta); err != nil {
 			return err
 		}
 	}
-	if err := UploadFiles(r, image.Hypervisor, image.Name, template, verbose, mem); err != nil {
+	if err := UploadFiles(r, image.Hypervisor, image.Name, template, verbose, mem, porta); err != nil {
 		return err
 	}
 	return SetArgs(r, image.Hypervisor, image.Name, template.Cmdline)
@@ -93,7 +96,7 @@ func checkConfig(t *core.Template, r *util.Repo, hypervisor string) error {
 	return nil
 }
 
-func UploadRPM(r *util.Repo, hypervisor string, image string, template *core.Template, verbose bool, mem string) error {
+func UploadRPM(r *util.Repo, hypervisor string, image string, template *core.Template, verbose bool, mem string, porta string) error {
 	file := r.ImagePath(hypervisor, image)
 	size, err := util.ParseMemSize(mem)
 	if err != nil {
@@ -104,7 +107,7 @@ func UploadRPM(r *util.Repo, hypervisor string, image string, template *core.Tem
 		Verbose:     verbose,
 		Memory:      size,
 		Networking:  "nat",
-		NatRules:    []nat.Rule{nat.Rule{GuestPort: "10000", HostPort: "10000"}},
+		NatRules:    []nat.Rule{nat.Rule{GuestPort: "10000", HostPort: porta}},
 		BackingFile: false,
 	}
 	vm, err := qemu.LaunchVM(vmconfig)
@@ -113,7 +116,7 @@ func UploadRPM(r *util.Repo, hypervisor string, image string, template *core.Tem
 	}
 	defer vm.Process.Kill()
 
-	conn, err := util.ConnectAndWait("tcp", "localhost:10000")
+	conn, err := util.ConnectAndWait("tcp", "localhost:" + porta)
 	if err != nil {
 		return err
 	}
@@ -174,7 +177,7 @@ func copyFile(conn net.Conn, src string, dst string) error {
 	return nil
 }
 
-func UploadFiles(r *util.Repo, hypervisor string, image string, t *core.Template, verbose bool, mem string) error {
+func UploadFiles(r *util.Repo, hypervisor string, image string, t *core.Template, verbose bool, mem string, porta string) error {
 	file := r.ImagePath(hypervisor, image)
 	size, err := util.ParseMemSize(mem)
 	if err != nil {
@@ -185,7 +188,7 @@ func UploadFiles(r *util.Repo, hypervisor string, image string, t *core.Template
 		Verbose:     verbose,
 		Memory:      size,
 		Networking:  "nat",
-		NatRules:    []nat.Rule{nat.Rule{GuestPort: "10000", HostPort: "10000"}},
+		NatRules:    []nat.Rule{nat.Rule{GuestPort: "10000", HostPort: porta}},
 		BackingFile: false,
 	}
 	cmd, err := qemu.VMCommand(vmconfig)
@@ -221,7 +224,7 @@ func UploadFiles(r *util.Repo, hypervisor string, image string, t *core.Template
 		go io.Copy(ioutil.Discard, stdout)
 		go io.Copy(ioutil.Discard, stderr)
 	}
-	conn, err := util.ConnectAndWait("tcp", "localhost:10000")
+	conn, err := util.ConnectAndWait("tcp", "localhost:" + porta)
 	if err != nil {
 		return err
 	}
