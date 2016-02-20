@@ -47,3 +47,8 @@ cd /opt/unikernels_workload/mysql41
 echo "bla2" >> README
 git commit -am "vai"
 git push
+
+cd /opt/unikernels_workload/node
+echo "bla2" >> README
+git commit -am "vai"
+git push
