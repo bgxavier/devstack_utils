@@ -18,6 +18,7 @@ glance image-create --name "apache-activemq" --is-public True --disk-format qcow
 
 glance image-create --name tomcat --is-public True --disk-format qcow2 --container-format bare --file /opt/osv_images/tomcat/tomcat.qemu
 
+glance image-create --name node --is-public True --disk-format qcow2 --container-format bare --file /opt/osv_images/node/node.qemu
 
 glance_unikernel.sh git@10.32.45.217:/opt/git/apache-activemq
 glance_unikernel.sh git@10.32.45.217:/opt/git/apache-spark
@@ -29,3 +30,4 @@ glance_unikernel.sh git@10.32.45.217:/opt/git/mysql41
 glance_unikernel.sh git@10.32.45.217:/opt/git/redis-memonly
 glance_unikernel.sh git@10.32.45.217:/opt/git/solr
 glance_unikernel.sh git@10.32.45.217:/opt/git/tomcat
+glance_unikernel.sh git@10.32.45.217:/opt/git/node
